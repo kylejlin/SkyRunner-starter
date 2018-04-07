@@ -99,7 +99,7 @@ function for_each(component_constructors, fn) {
     var entity = entities[i]
     if (entity.has_all(component_constructors)) if (fn(entity)) break;
     // if this entity was removed by fn(), make sure we do not skip the next one
-    if (entity != entities[i]) i--;
+    if (entity !== entities[i]) i--;
   }
 }
 

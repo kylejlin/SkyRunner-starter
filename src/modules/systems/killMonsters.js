@@ -8,7 +8,6 @@ import {
 export default { update: function(dt) {
 	ecs.for_each([components.Shot], function(shot) {
 		var ray = shot.get(components.Shot).ray;
-		var i = 0;
 		ecs.for_each([components.Monster, components.Motion, components.Body, components.AnimatedObject], function(monster) {
 			if (monster.get(components.UnderFire)) return;
 
@@ -48,7 +47,7 @@ export default { update: function(dt) {
 						// if it still has its plate attached, remove it
 						var plateComponent = monster.get(components.PlateEntity);
 						if(plateComponent) {
-							plateComponent.entity.add(new components.PlatePendingRemoval);
+							plateComponent.entity.add(new components.PlatePendingRemoval());
 							monster.remove(components.PlateEntity);
 						}
 					});

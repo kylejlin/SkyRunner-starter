@@ -43,7 +43,7 @@ export default { update: function(dt) {
 					// if it still has its plate attached, remove it
 					var plateComponent = monster.get(components.PlateEntity);
 					if(plateComponent) {
-						plateComponent.entity.add(new components.PlatePendingRemoval);
+						plateComponent.entity.add(new components.PlatePendingRemoval());
 						monster.remove(components.PlateEntity);
 					}
 				} else {

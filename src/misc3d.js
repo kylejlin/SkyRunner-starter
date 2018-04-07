@@ -31,7 +31,7 @@ SkyBox.prototype = Object.create(THREE.Mesh.prototype);
  * http://oos.moxiecode.com/js_webgl/md2_converter/
  */
 const AnimatedMD2Model = function(json, image, defaultAnimation, defaultAnimationTime) {
-	if (json.constructor == THREE.Geometry) {
+	if (json.constructor === THREE.Geometry) {
 		// avoid needless re-init in clone() call
 		THREE.MorphAnimMesh.call(this, json, image);
 
@@ -83,9 +83,9 @@ AnimatedMD2Model.prototype.getVertexCoordinates = (function(){
 }) ();
 
 AnimatedMD2Model.prototype.setDefaultAnimation = function(animation, time) {
-	if (this.defaultAnimation && (this.defaultAnimation.animation != animation)) {
+	if (this.defaultAnimation && (this.defaultAnimation.animation !== animation)) {
 		var playingDefaultAnimation = this.playingAnimation && (
-			this.playingAnimation.animation == this.defaultAnimation.animation
+			this.playingAnimation.animation === this.defaultAnimation.animation
 		);
 		this.defaultAnimation.animation = animation;
 		this.defaultAnimation.time = time;

@@ -69,7 +69,6 @@ export default THREE => {
   		if ( parts && parts.length > 1 ) {
 
   			var label = parts[ 1 ];
-  			var num = parts[ 2 ];
 
   			if ( ! animations[ label ] ) animations[ label ] = { start: Infinity, end: -Infinity };
 

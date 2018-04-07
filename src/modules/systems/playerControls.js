@@ -49,7 +49,7 @@ document.addEventListener ('touchmove', function (e) {
 	e.preventDefault ();
 	for (var i = 0; i < e.changedTouches.length; i++) {
 		var touch = e.changedTouches[i];
-		if (touch.identifier == firstTouch) {
+		if (touch.identifier === firstTouch) {
 			firstTouchVector.set (touch.clientX, touch.clientY).sub (firstTouchOrigin);
 			break;
 		}
@@ -58,7 +58,7 @@ document.addEventListener ('touchmove', function (e) {
 document.addEventListener ('touchend', function (e) {
 	for (var i = 0; i < e.changedTouches.length; i++) {
 		var touch = e.changedTouches[i];
-		if (touch.identifier == firstTouch) {
+		if (touch.identifier === firstTouch) {
 			firstTouch = -1;
 			firstTouchVector.set (0, 0);
 		} else {

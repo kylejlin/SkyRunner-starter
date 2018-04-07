@@ -17,7 +17,7 @@ export default { update: function(dt) {
 
 			var object = game.assets.monsterModel.clone();
 
-			var item = new ecs.Entity()
+			new ecs.Entity()
 				.add(new components.Monster())
 				.add(new components.Body(object))
 				.add(new components.AnimatedObject(object))

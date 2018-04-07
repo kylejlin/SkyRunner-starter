@@ -31,8 +31,7 @@ import {
 	StaticMD2Model,
 	DissolvingEffect,
 	createMeshForPlate,
-	createPlasmaBall,
-	topSide
+	createPlasmaBall
 } from './misc3d'
 
 // load game assets
