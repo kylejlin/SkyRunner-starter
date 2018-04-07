@@ -4,6 +4,8 @@ import components from '../components'
 import THREE from '../../polyfilledThree/index'
 import $ from '../../shimmedJquery'
 
+const TAU = Math.PI * 2
+
 var keys = { SP: 32, W: 87, A: 65, S: 83, D: 68, UP: 38, LT: 37, DN: 40, RT: 39 };
 
 var keysPressed = {};
@@ -67,6 +69,34 @@ document.addEventListener ('touchend', function (e) {
 	}
 });
 
+const mouse = {
+	x: 0,
+	y: 0,
+	isLocked: false
+}
+
+document.body.addEventListener('mousemove', e => {
+	if (mouse.isLocked) {
+		mouse.x += e.movementX
+		mouse.y += e.movementY
+
+		if (mouse.y < 0) {
+			mouse.y = 0
+		}
+		if (mouse.y > window.innerHeight) {
+			mouse.y = window.innerHeight
+		}
+	}
+})
+
+document.body.addEventListener('click', () => {
+	document.body.requestPointerLock()
+})
+
+document.addEventListener('pointerlockchange', () => {
+	mouse.isLocked = !!document.pointerLockElement
+});
+
 export default { update: function (dt) {
 	ecs.for_each([components.Hero, components.Motion], function(player) {
 		var motion = player.get(components.Motion);
@@ -85,11 +115,17 @@ export default { update: function (dt) {
 			var lookDownTouchInput = (Math.abs (rotationTouchInput) + Math.abs (movementTouchInput) > 0) ? 1 : 0;
 
 			// look around
-			var sx = (keysPressed[keys.UP] ? 0.04 : (keysPressed[keys.DN] ? -0.04 : 0)) - 0.04 * lookDownTouchInput;
-			var sy = (keysPressed[keys.LT] ? 0.04 : (keysPressed[keys.RT] ? -0.04 : 0)) - 0.04 * rotationTouchInput;
+			if (mouse.isLocked) {
+				const rx = ((mouse.y / window.innerHeight) - 0.5) * -2
+	      const ry = (mouse.x / window.innerWidth) * -TAU
+				motion.rotation.set(rx, ry)
+			} else {
+				const sx = (keysPressed[keys.UP] ? 0.04 : (keysPressed[keys.DN] ? -0.04 : 0)) - 0.04 * lookDownTouchInput;
+				const sy = (keysPressed[keys.LT] ? 0.04 : (keysPressed[keys.RT] ? -0.04 : 0)) - 0.04 * rotationTouchInput;
 
-			if(Math.abs(sx) >= Math.abs(motion.spinning.x)) motion.spinning.x = sx;
-			if(Math.abs(sy) >= Math.abs(motion.spinning.y)) motion.spinning.y = sy;
+				if(Math.abs(sx) >= Math.abs(motion.spinning.x)) motion.spinning.x = sx;
+				if(Math.abs(sy) >= Math.abs(motion.spinning.y)) motion.spinning.y = sy;
+			}
 
 			// move around
 			// calculate forward direction in the horizontal plane from rotation
