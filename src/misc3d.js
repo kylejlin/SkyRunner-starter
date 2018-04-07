@@ -292,36 +292,40 @@ const DissolvingEffect = function(object, color, duration, fadeOut) {
 };
 
 DissolvingEffect.prototype = {
-	vertexShader: 'varying vec2 vUv;\
-		uniform float morphTargetInfluences[ 8 ];\
-		void main() {\
-			vUv = uv;\
-			vec3 morphed = vec3( 0.0 );\
-			\n#ifdef USE_MORPHTARGETS\n\
-			morphed += ( morphTarget0 - position ) * morphTargetInfluences[ 0 ];\
-			morphed += ( morphTarget1 - position ) * morphTargetInfluences[ 1 ];\
-			morphed += ( morphTarget2 - position ) * morphTargetInfluences[ 2 ];\
-			morphed += ( morphTarget3 - position ) * morphTargetInfluences[ 3 ];\
-			morphed += ( morphTarget4 - position ) * morphTargetInfluences[ 4 ];\
-			morphed += ( morphTarget5 - position ) * morphTargetInfluences[ 5 ];\
-			morphed += ( morphTarget6 - position ) * morphTargetInfluences[ 6 ];\
-			morphed += ( morphTarget7 - position ) * morphTargetInfluences[ 7 ];\
-			\n#endif\n\
-			morphed += position;\
-			gl_Position = projectionMatrix * (modelViewMatrix * vec4( morphed, 1.0 ));\
-		}',
-	fragmentShader: 'varying vec2 vUv;\
-		uniform sampler2D texture;\
-		uniform sampler2D noise;\
-		uniform vec3 color;\
-		uniform float dissolve;\
-		void main() {\
-			vec4 c4 = texture2D( texture, vUv );\
-			float n = texture2D( noise, vUv ).x - dissolve;\
-			if (n < 0.0) { discard; }\
-			if (n < 0.05) { c4.rgb = color; }\
-			gl_FragColor = c4;\
-		}'
+	vertexShader: `varying vec2 vUv;
+		uniform float morphTargetInfluences[ 8 ];
+		void main() {
+			vUv = uv;
+			vec3 morphed = vec3( 0.0 );
+
+			#ifdef USE_MORPHTARGETS
+
+			morphed += ( morphTarget0 - position ) * morphTargetInfluences[ 0 ];
+			morphed += ( morphTarget1 - position ) * morphTargetInfluences[ 1 ];
+			morphed += ( morphTarget2 - position ) * morphTargetInfluences[ 2 ];
+			morphed += ( morphTarget3 - position ) * morphTargetInfluences[ 3 ];
+			morphed += ( morphTarget4 - position ) * morphTargetInfluences[ 4 ];
+			morphed += ( morphTarget5 - position ) * morphTargetInfluences[ 5 ];
+			morphed += ( morphTarget6 - position ) * morphTargetInfluences[ 6 ];
+			morphed += ( morphTarget7 - position ) * morphTargetInfluences[ 7 ];
+
+			#endif
+
+			morphed += position;
+			gl_Position = projectionMatrix * (modelViewMatrix * vec4( morphed, 1.0 ));
+		}`,
+	fragmentShader: `varying vec2 vUv;
+		uniform sampler2D texture;
+		uniform sampler2D noise;
+		uniform vec3 color;
+		uniform float dissolve;
+		void main() {
+			vec4 c4 = texture2D( texture, vUv );
+			float n = texture2D( noise, vUv ).x - dissolve;
+			if (n < 0.0) { discard; }
+			if (n < 0.05) { c4.rgb = color; }
+			gl_FragColor = c4;
+		}`
 };
 
 export {
