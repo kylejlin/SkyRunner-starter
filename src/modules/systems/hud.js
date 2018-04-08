@@ -8,7 +8,8 @@ var num2str = function(number) {
 
 // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/touchevents.js
 if (('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch)) {
-	document.getElementById("instructions").innerHTML = "Touch on the right side and drag to move, touch on the left to shoot.";
+	document.getElementById('instructions').innerHTML = 'Touch on left side to move, right side to turn. Touch on the right side with a second finger to shoot.'
+	document.getElementById('mouse-hint').innerHTML = ''
 }
 
 export default { update: function(dt) {
