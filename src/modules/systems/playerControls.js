@@ -6,10 +6,11 @@ import $ from '../../shimmedJquery'
 
 const IS_MOBILE = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch)
 const TAU = Math.PI * 2
+const IS_TAP_TO_SHOOT_ENABLED = true
 
-var keys = { SP: 32, W: 87, A: 65, S: 83, D: 68, UP: 38, LT: 37, DN: 40, RT: 39 };
+const keys = { SP: 32, W: 87, A: 65, S: 83, D: 68, UP: 38, LT: 37, DN: 40, RT: 39 };
 
-var keysPressed = {};
+const keysPressed = {};
 
 (function(watchedKeyCodes) {
 	var handler = function(down) {
@@ -27,10 +28,12 @@ var keysPressed = {};
 ]);
 
 
-var forward = new THREE.Vector3();
-var sideways = new THREE.Vector3();
+const forward = new THREE.Vector3();
+const sideways = new THREE.Vector3();
 
 const rightTouch = {
+	initialX: 0,
+	initialY: 0,
 	x: 0,
 	y: 0,
 	identifier: null
@@ -46,6 +49,8 @@ const otherTouch = {
 	identifier: null
 }
 
+let isShotPending = false
+
 document.addEventListener('touchmove', e => {
 	e.preventDefault()
 }, { passive: false })
@@ -54,6 +59,8 @@ document.addEventListener('touchstart', e => {
 	Array.from(e.changedTouches).forEach(touch => {
 		if (rightTouch.identifier === null && touch.clientX > (window.innerWidth / 2)) {
 			rightTouch.identifier = touch.identifier
+			rightTouch.initialX = touch.clientX
+			rightTouch.initialY = touch.clientY
 			rightTouch.x = touch.clientX
 			rightTouch.y = touch.clientY
 		} else if (leftTouch.identifier === null && touch.clientX < (window.innerWidth / 2)) {
@@ -98,9 +105,23 @@ document.addEventListener('touchend', e => {
 	Array.from(e.changedTouches).forEach(touch => {
 		switch (touch.identifier) {
 			case rightTouch.identifier:
+			  if (
+					IS_TAP_TO_SHOOT_ENABLED
+					&& rightTouch.initialX === touch.clientX
+					&& rightTouch.initialY === touch.clientY
+				) {
+					isShotPending = true
+				}
 			  rightTouch.identifier = null
 				break
 			case leftTouch.identifier:
+			  if (
+					IS_TAP_TO_SHOOT_ENABLED
+					&& leftTouch.initialX === touch.clientX
+					&& leftTouch.initialY === touch.clientY
+				) {
+					isShotPending = true
+				}
 			  leftTouch.identifier = null
 				leftTouch.initialX = 0
 				leftTouch.initialY = 0
@@ -146,7 +167,7 @@ document.addEventListener('pointerlockchange', () => {
 
 export default { update: function (dt) {
 	ecs.for_each([components.Hero, components.Motion], function(player) {
-		var motion = player.get(components.Motion);
+		const motion = player.get(components.Motion);
 		if(!motion.airborne) {
 			// Look around
 			if (mouse.isLocked /* Mouse controls */) {
@@ -187,7 +208,7 @@ export default { update: function (dt) {
 					: joystickUnitVector.x * 0.1
 			);
 
-			var combined = forward.add(sideways);
+			const combined = forward.add(sideways);
 			if(Math.abs(combined.x) >= Math.abs(motion.velocity.x)) motion.velocity.x = combined.x;
 			if(Math.abs(combined.y) >= Math.abs(motion.velocity.y)) motion.velocity.y = combined.y;
 			if(Math.abs(combined.z) >= Math.abs(motion.velocity.z)) motion.velocity.z = combined.z;
@@ -195,11 +216,11 @@ export default { update: function (dt) {
 		}
 
 		// if player has the shotgun...
-		var shotgun = player.get(components.Shotgun);
+		const shotgun = player.get(components.Shotgun);
 		if(shotgun) {
-
 			// ...try to use it
-			shotgun.pullingTrigger = keysPressed[keys.SP] || otherTouch.identifier !== null;
+			shotgun.pullingTrigger = keysPressed[keys.SP] || otherTouch.identifier !== null || isShotPending
+			isShotPending = false
 		}
 
 		return true;
