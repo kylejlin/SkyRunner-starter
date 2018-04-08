@@ -21,9 +21,10 @@ export default { update: function(dt) {
 		shotgunModel.position.y = -0.2   + b * (Math.cos(t * 2) - 1);
 
 		// fire?
-		if(shotgun.pullingTrigger && !shotgun.loading && !shotgun.firing && (hero.shells > 0)) {
+		if((shotgun.pullingTrigger || shotgun.isShotPending) && !shotgun.loading && !shotgun.firing && (hero.shells > 0)) {
 			// fire!
 			shotgun.firing = true;
+			shotgun.isShotPending = false
 
 			game.assets.shotgunFired.cloneNode().play();
 

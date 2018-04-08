@@ -67,6 +67,7 @@ export default {
 		this.firing = false;
 		this.loading = false;
 		this.pullingTrigger = false;
+		this.isShotPending = false
 	},
 
 	Monster : function Monster () {

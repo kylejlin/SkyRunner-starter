@@ -219,8 +219,11 @@ export default { update: function (dt) {
 		const shotgun = player.get(components.Shotgun);
 		if(shotgun) {
 			// ...try to use it
-			shotgun.pullingTrigger = keysPressed[keys.SP] || otherTouch.identifier !== null || isShotPending
-			isShotPending = false
+			shotgun.pullingTrigger = keysPressed[keys.SP] || otherTouch.identifier !== null
+			if (isShotPending) {
+				shotgun.isShotPending = true
+				isShotPending = false
+			}
 		}
 
 		return true;
