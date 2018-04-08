@@ -4,6 +4,7 @@ import components from '../components'
 import THREE from '../../polyfilledThree/index'
 import $ from '../../shimmedJquery'
 
+const IS_MOBILE = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch)
 const TAU = Math.PI * 2
 
 var keys = { SP: 32, W: 87, A: 65, S: 83, D: 68, UP: 38, LT: 37, DN: 40, RT: 39 };
@@ -29,45 +30,91 @@ var keysPressed = {};
 var forward = new THREE.Vector3();
 var sideways = new THREE.Vector3();
 
-// alternative controls for touch screens
-// inspired by https://github.com/sebleedelisle/JSTouchController/blob/master/TouchControl.html
+const rightTouch = {
+	x: 0,
+	y: 0,
+	identifier: null
+}
+const leftTouch = {
+	initialX: 0,
+	initialY: 0,
+	x: 0,
+	y: 0,
+	identifier: null
+}
+const otherTouch = {
+	identifier: null
+}
 
-var firstTouch = -1, otherTouches = 0;
-var firstTouchOrigin = new THREE.Vector2();
-var firstTouchVector = new THREE.Vector2();
+document.addEventListener('touchmove', e => {
+	e.preventDefault()
+}, { passive: false })
 
-document.addEventListener ('touchstart', function (e) {
-	for (var i = 0; i < e.changedTouches.length; i++) {
-		var touch = e.changedTouches[i];
-		if ((firstTouch < 0) && (touch.clientX > 0.5 * window.innerWidth)) {
-			firstTouch = touch.identifier;
-			firstTouchOrigin.set (touch.clientX, touch.clientY);
-		} else {
-			otherTouches++;
+document.addEventListener('touchstart', e => {
+	Array.from(e.changedTouches).forEach(touch => {
+		if (rightTouch.identifier === null && touch.clientX > (window.innerWidth / 2)) {
+			rightTouch.identifier = touch.identifier
+			rightTouch.x = touch.clientX
+			rightTouch.y = touch.clientY
+		} else if (leftTouch.identifier === null && touch.clientX < (window.innerWidth / 2)) {
+			leftTouch.identifier = touch.identifier
+			leftTouch.initialX = touch.clientX
+			leftTouch.initialY = touch.clientY
+		} else if (otherTouch.identifier === null){
+			otherTouch.identifier = touch.identifier
 		}
-	}
-});
-document.addEventListener ('touchmove', function (e) {
-	e.preventDefault ();
-	for (var i = 0; i < e.changedTouches.length; i++) {
-		var touch = e.changedTouches[i];
-		if (touch.identifier === firstTouch) {
-			firstTouchVector.set (touch.clientX, touch.clientY).sub (firstTouchOrigin);
-			break;
+	})
+})
+document.addEventListener('touchmove', e => {
+	Array.from(e.changedTouches).forEach(touch => {
+		switch (touch.identifier) {
+			case rightTouch.identifier:
+				const dx = touch.clientX - rightTouch.x
+				const dy = touch.clientY - rightTouch.y
+
+				mouse.x += dx
+				mouse.y += dy
+
+				if (mouse.y < 0) {
+					mouse.y = 0
+				}
+				if (mouse.y > window.innerHeight) {
+					mouse.y = window.innerHeight
+				}
+
+				rightTouch.x = touch.clientX
+				rightTouch.y = touch.clientY
+				break
+			case leftTouch.identifier:
+			  leftTouch.x = touch.clientX
+				leftTouch.y = touch.clientY
+				break
+			default:
+			  break
 		}
-	}
-});
-document.addEventListener ('touchend', function (e) {
-	for (var i = 0; i < e.changedTouches.length; i++) {
-		var touch = e.changedTouches[i];
-		if (touch.identifier === firstTouch) {
-			firstTouch = -1;
-			firstTouchVector.set (0, 0);
-		} else {
-			otherTouches--;
+	})
+})
+document.addEventListener('touchend', e => {
+	Array.from(e.changedTouches).forEach(touch => {
+		switch (touch.identifier) {
+			case rightTouch.identifier:
+			  rightTouch.identifier = null
+				break
+			case leftTouch.identifier:
+			  leftTouch.identifier = null
+				leftTouch.initialX = 0
+				leftTouch.initialY = 0
+				leftTouch.x = 0
+				leftTouch.y = 0
+				break
+			case otherTouch.identifier:
+			  otherTouch.identifier = null
+				break
+			default:
+			  break
 		}
-	}
-});
+	})
+})
 
 const mouse = {
 	x: 0,
@@ -101,31 +148,27 @@ export default { update: function (dt) {
 	ecs.for_each([components.Hero, components.Motion], function(player) {
 		var motion = player.get(components.Motion);
 		if(!motion.airborne) {
-
-			// interpret touch vector
-			var rotationTouchInput = firstTouchVector.x;
-			if (rotationTouchInput > 0) rotationTouchInput = Math.max (0, rotationTouchInput - 0.02 * window.innerWidth);
-			if (rotationTouchInput < 0) rotationTouchInput = Math.min (0, rotationTouchInput + 0.02 * window.innerWidth);
-			rotationTouchInput = Math.max (-1, Math.min (1, rotationTouchInput / (0.2 * window.innerWidth)));
-
-			var movementTouchInput = firstTouchVector.y;
-			movementTouchInput = Math.max (-1, Math.min (1, movementTouchInput / (0.1 * window.innerWidth)));
-
-			// there is no easy way to look up or down using touch screen only
-			var lookDownTouchInput = (Math.abs (rotationTouchInput) + Math.abs (movementTouchInput) > 0) ? 1 : 0;
-
-			// look around
-			if (mouse.isLocked) {
+			// Look around
+			if (mouse.isLocked /* Mouse controls */) {
 				const rx = ((mouse.y / window.innerHeight) - 0.5) * -2
 	      const ry = (mouse.x / window.innerWidth) * -TAU
 				motion.rotation.set(rx, ry)
-			} else {
-				const sx = (keysPressed[keys.UP] ? 0.04 : (keysPressed[keys.DN] ? -0.04 : 0)) - 0.04 * lookDownTouchInput;
-				const sy = (keysPressed[keys.LT] ? 0.04 : (keysPressed[keys.RT] ? -0.04 : 0)) - 0.04 * rotationTouchInput;
+			} else if (!IS_MOBILE /* Keyboard controls */) {
+				const sx = (keysPressed[keys.UP] ? 0.04 : (keysPressed[keys.DN] ? -0.04 : 0));
+				const sy = (keysPressed[keys.LT] ? 0.04 : (keysPressed[keys.RT] ? -0.04 : 0));
 
 				if(Math.abs(sx) >= Math.abs(motion.spinning.x)) motion.spinning.x = sx;
 				if(Math.abs(sy) >= Math.abs(motion.spinning.y)) motion.spinning.y = sy;
+			} else /* Touch controls */ {
+				const rx = ((mouse.y / window.innerHeight) - 0.5) * -2
+				const ry = (mouse.x / window.innerWidth) * -TAU
+				motion.rotation.set(rx, ry)
 			}
+
+
+			const joystickX = leftTouch.x - leftTouch.initialX
+			const joystickY = leftTouch.y - leftTouch.initialY
+			const joystickUnitVector = (new THREE.Vector2(joystickX, joystickY)).normalize()
 
 			// move around
 			// calculate forward direction in the horizontal plane from rotation
@@ -133,8 +176,16 @@ export default { update: function (dt) {
 			// calculate sideways direction from forward direction
 			sideways.set(forward.z, 0, -forward.x);
 
-			forward.multiplyScalar((keysPressed[keys.W] ? -0.1 : (keysPressed[keys.S] ? 0.1 : 0)) + 0.1 * movementTouchInput);
-			sideways.multiplyScalar(keysPressed[keys.A] ? -0.1 : (keysPressed[keys.D] ? 0.1 : 0));
+			forward.multiplyScalar(
+				!IS_MOBILE
+				  ? (keysPressed[keys.W] ? -0.1 : (keysPressed[keys.S] ? 0.1 : 0))
+					: joystickUnitVector.y * 0.1
+			);
+			sideways.multiplyScalar(
+				!IS_MOBILE
+				  ? keysPressed[keys.A] ? -0.1 : (keysPressed[keys.D] ? 0.1 : 0)
+					: joystickUnitVector.x * 0.1
+			);
 
 			var combined = forward.add(sideways);
 			if(Math.abs(combined.x) >= Math.abs(motion.velocity.x)) motion.velocity.x = combined.x;
@@ -148,7 +199,7 @@ export default { update: function (dt) {
 		if(shotgun) {
 
 			// ...try to use it
-			shotgun.pullingTrigger = keysPressed[keys.SP] || (otherTouches > 0);
+			shotgun.pullingTrigger = keysPressed[keys.SP] || otherTouch.identifier !== null;
 		}
 
 		return true;
