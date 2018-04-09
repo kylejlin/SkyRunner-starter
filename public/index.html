@@ -25,16 +25,27 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="a"><img id="b" height="60" width="60" alt="Loading..." src="assets/misc/loading.gif"></div>
-		<div id="c">
-			<div id="d">shells<div id="shells">O</div></div>
-			<div id="e">health<div id="health">IOO</div></div>
-			<div id="f">
-				Welcome to the game!
-				<span id="instructions">Use arrow keys to look around, WASD to move and SPACE to shoot.</span>
-				<br /><br />
-        <span id="mouse-hint">If you prefer mouse controls, click the screen to enable them.</span>
+
+    <div id="canvasPlaceholder"></div>
+
+    <div id="mainMenu" class="page">
+      <div id="mainMenu-header" class="header">SkyRunner</div>
+      <div id="mainMenu-playButton" class="button">Play</div>
+      <div id="mainMenu-controlsButton" class="button">Controls</div>
+    </div>
+    <div id="controlsMenu" class="page">
+      <div id="controlsMenu-controls">
+				<span id="keyboard-controls"></span>
+        <p>WASD: Move</p>
+        <p>Mouse: Aim / Turn</p>
+        <p>Space: Shoot</p>
 			</div>
+      <div id="controlsMenu-backButton" class="button">Back</div>
+    </div>
+
+		<div id="hud">
+			<div id="hud-shellsContainer">shells<div id="shells">O</div></div>
+			<div id="hud-healthContainer">health<div id="health">IOO</div></div>
 		</div>
     <!--
       This HTML file is a template.

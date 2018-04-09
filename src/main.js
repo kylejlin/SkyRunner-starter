@@ -34,6 +34,8 @@ import {
 	createPlasmaBall
 } from './misc3d'
 
+const IS_MOBILE = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch)
+
 // load game assets
 // http://css-tricks.com/multiple-simultaneous-ajax-requests-one-callback-jquery/
 $.when(
@@ -153,7 +155,7 @@ $.when(
 
 	// add 3D scene to the webpage
 
-	$("#a").replaceWith(game.domElement);
+	$("#loadingImageContainer").replaceWith(game.domElement);
 	var gameViewportSize = function() { return {
 		width: window.innerWidth, height: window.innerHeight
 	}};
@@ -161,8 +163,8 @@ $.when(
 
 	// show hud and fade welcome message out
 
-	$("#c").show();
-	$("#f").delay(6000).fadeOut();
+	//$("#hud").show();
+	//$("#instructions").delay(6000).fadeOut();
 
 
 	// create entities
@@ -201,7 +203,31 @@ $.when(
 
 	};
 
-	game.start(gameLoop, gameViewportSize);
+	$('#mainMenu-playButton').on('click', () => {
+		$('#hud').show()
+		$('#canvasPlaceholder').replaceWith(game.domElement)
+		game.start(gameLoop, gameViewportSize)
+		$('#mainMenu').hide()
+	})
+
+	$('#mainMenu-controlsButton').on('click', () => {
+    $('#mainMenu').hide()
+		$('#controlsMenu').show()
+	})
+
+	$('#controlsMenu-backButton').on('click', () => {
+		$('#controlsMenu').hide()
+		$('#mainMenu').show()
+	})
+
+	if (IS_MOBILE) {
+		$('#controlsMenu-controls').html(`
+			<p>Tap anywhere on the right half to shoot.</p>
+      <p>Swipe on the left half to move.</p>
+			<p>Swipe on the right half to aim.</p>
+		`)
+	}
+
 
 }).fail(function(err, msg) {
 	console.log(err, msg);

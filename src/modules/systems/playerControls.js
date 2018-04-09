@@ -157,7 +157,7 @@ document.body.addEventListener('mousemove', e => {
 	}
 })
 
-document.body.addEventListener('click', () => {
+$('#mainMenu-playButton').on('click touchend', () => {
 	document.body.requestPointerLock()
 })
 
