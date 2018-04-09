@@ -115,13 +115,6 @@ document.addEventListener('touchend', e => {
 			  rightTouch.identifier = null
 				break
 			case leftTouch.identifier:
-			  if (
-					IS_TAP_TO_SHOOT_ENABLED
-					&& leftTouch.initialX === touch.clientX
-					&& leftTouch.initialY === touch.clientY
-				) {
-					isShotPending = true
-				}
 			  leftTouch.identifier = null
 				leftTouch.initialX = 0
 				leftTouch.initialY = 0
