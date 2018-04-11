@@ -36,7 +36,7 @@ export default { update: function(dt) {
 		playerHero.health -= damage;
 
 		if((playerHero.health > 0) && !underFire) {
-			game.assets.pain[(Math.random() < 0.8) ? 0 : 1].cloneNode().play();
+			game.assets.pain[(Math.random() < 0.8) ? 0 : 1].play();
 		}
 
 		underFire = true;

@@ -10,7 +10,7 @@ export default { update: function(dt) {
 		var motion = player.get(components.Motion);
 		if((motion.position.y < -123) || (health <= 0)) {
 			if (health <= 0) {
-				game.assets.death[(Math.random() < 0.7) ? 0 : 1].cloneNode().play();
+				game.assets.death[(Math.random() < 0.7) ? 0 : 1].play();
 			}
 
 			player.add(new components.PendingAddition());

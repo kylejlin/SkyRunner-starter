@@ -24,7 +24,7 @@ export default { update: function(dt) {
 				}
 
 				// mark the item for removal
-				item.add(new components.PendingRemoval(game.assets.itemPicked.cloneNode()));
+				item.add(new components.PendingRemoval(game.assets.itemPicked));
 
 				// mark its plate for removal
 				item.get(components.PlateEntity).entity.add(new components.PlatePendingRemoval());

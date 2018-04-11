@@ -20,7 +20,7 @@ export default { update: function(dt) {
 		// add 3D object to the scene
 		var object = entity.get(components.Body).object; game.scene.add(object);
 		// play sound to notify the player we have spawned something
-		var pa = entity.get(components.PendingAddition); if (pa.sound) { pa.sound.cloneNode().play(); }
+		var pa = entity.get(components.PendingAddition); if (pa.sound) { pa.sound.play(); }
 		// fade the object in
 		if(object.material) { entity.add(new components.Dissolving(new DissolvingEffect(object, pa.color, 2000, false))); }
 		// create new entity with Plate component for glowingPlates system to handle

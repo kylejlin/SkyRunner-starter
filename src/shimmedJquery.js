@@ -3,6 +3,7 @@
  * http://aboutcode.net/2013/01/09/load-images-with-jquery-deferred.html
  */
 import $ from 'jquery'
+import { Howl } from 'howler'
 
 $.loadImage = function(url) {
   // Define a "worker" function that should eventually resolve or reject the deferred object.
@@ -42,12 +43,27 @@ $.loadImage = function(url) {
   return $.Deferred(loadImage).promise();
 };
 
+$.loadAudio = url => {
+  return $.Deferred(deferred => {
+    const sound = new Howl({
+      src: [url],
+      onload: () => {
+        deferred.resolve(sound)
+      },
+      onloaderror: (id, err) => {
+        deferred.reject('Loading error for audio' + id + ': ' + err)
+      },
+      onplayerror: (id, err) => {
+        deferred.reject('Playing error for audio' + id + ': ' + err)
+      }
+    })
+  }).promise();
+}
 
-// do the same for html5 audio
-// except we can't really know
-// when it's fully loaded :(
 
-$.loadAudio = function(url) {
+// This is the old code that didn't work on mobile
+
+/*$.loadAudio = function(url) {
   var loadAudio = function(deferred) {
     var audio = new Audio(url);
 
@@ -88,6 +104,6 @@ $.loadAudio = function(url) {
   };
 
   return $.Deferred(loadAudio).promise();
-};
+};*/
 
 export default $

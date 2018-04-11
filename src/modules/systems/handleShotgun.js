@@ -26,7 +26,7 @@ export default { update: function(dt) {
 			shotgun.firing = true;
 			shotgun.isShotPending = false
 
-			game.assets.shotgunFired.cloneNode().play();
+			game.assets.shotgunFired.play();
 
 			// play shotgun animation
 			shotgunModel.playOnce("pow", 600, function() {

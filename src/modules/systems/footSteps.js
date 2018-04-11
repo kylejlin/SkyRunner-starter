@@ -12,7 +12,7 @@ export default { update: function(dt) {
 		if(!motion.airborne) {
 			if(lastPosition.distanceToSquared(motion.position) > 3) {
 				lastPosition.copy(motion.position);
-				game.assets.steps[ Math.round(game.assets.steps.length * Math.random()) % game.assets.steps.length ].cloneNode().play();
+				game.assets.steps[ Math.round(game.assets.steps.length * Math.random()) % game.assets.steps.length ].play();
 			}
 		}
 		return true;
