@@ -49,49 +49,39 @@ body{
   background-size: cover;
 
   text-align: center;
-}
-
-.header {
   font-family: 'doomregular';
-  font-size: 48px;
   color: orange;
-  margin: 20px;
 }
 
 .button {
-  font-family: 'doomregular';
-  font-size: 42px;
-  color: orange;
+  font-size: 12vh;
   background-color: #111A;
 
-  padding: 12px;
-  margin: 12px;
+  padding: 3vh;
+  margin: 3vh;
   width: min-content;
 
   border: 1px solid orange;
-  border-radius: 6px;
+  border-radius: 1.5vh;
   transform: skew(-20deg);
 
   display: inline-block;
 }
 
-#mainMenu {
-  padding-top: 20vh;
-}
-
-#controlsMenu {
-  padding-top: 5vh;
+#mainMenu .header {
+  font-size: 15vh;
+  margin: 20vh 0 0 0;
 }
 
 #controlsMenu-controls {
   color: orange;
   background-color: #111A;
   font-family: 'doomregular';
-  font-size: 24px;
+  font-size: 6vh;
 
-  margin: 5vh;
+  margin: 5vh 3vh 3vh 3vh;
 
-  border-radius: 6px;
+  border-radius: 1.5vh;
 }
 
 #controlsMenu {
