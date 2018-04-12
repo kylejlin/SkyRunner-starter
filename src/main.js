@@ -28,7 +28,7 @@ import handleShotgun from './modules/systems/handleShotgun'
 import plasmaBalls from './modules/systems/plasmaBalls'
 import hud from './modules/systems/hud'
 
-import $ from './shimmedJquery'
+import $ from 'jquery'
 import THREE from './polyfilledThree/index'
 
 import {
@@ -116,7 +116,7 @@ Promise.all([
 	game.scene.add(new SkyBox([
 		skyboxSide3, skyboxSide5, skyboxSide6, skyboxSide1, skyboxSide2, skyboxSide4
 	], 1400));
-	
+
 	arenaModel = new StaticMD2Model(arenaModel, arenaTexture);
 	arenaModel.material.map.anisotropy = game.maxAnisotropy;
 	game.scene.add(arenaModel);

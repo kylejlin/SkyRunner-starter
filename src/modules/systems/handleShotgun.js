@@ -3,7 +3,7 @@ import game from '../game'
 import components from '../components'
 
 import THREE from '../../polyfilledThree/index'
-import $ from '../../shimmedJquery'
+import $ from 'jquery'
 
 var swayFactor = 0;
 export default { update: function(dt) {
