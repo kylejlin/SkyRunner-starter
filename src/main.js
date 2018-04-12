@@ -1,6 +1,12 @@
 import ecs from './modules/ecs'
 import game from './modules/game'
 import components from './modules/components'
+import {
+	loadJSON,
+	loadImage,
+	loadAudio
+} from './modules/loaders'
+
 import resetHero from './modules/systems/resetHero'
 import spawnItems from './modules/systems/spawnItems'
 import spawnMonsters from './modules/systems/spawnMonsters'
@@ -36,43 +42,41 @@ import {
 
 const IS_MOBILE = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch)
 
-// load game assets
-// http://css-tricks.com/multiple-simultaneous-ajax-requests-one-callback-jquery/
-$.when(
-	 $.loadImage("assets/skybox/Side1.jpg")
-	,$.loadImage("assets/skybox/Side2.jpg")
-	,$.loadImage("assets/skybox/Side3.jpg")
-	,$.loadImage("assets/skybox/Side4.jpg")
-	,$.loadImage("assets/skybox/Side5.jpg")
-	,$.loadImage("assets/skybox/Side6.jpg")
-	,$.getJSON("assets/arena/arena.json")
-	,$.loadImage("assets/arena/arena.jpg")
-	,$.getJSON("assets/shotgun/hud/Dreadus-Shotgun.json")
-	,$.loadImage("assets/shotgun/hud/Dreadus-Shotgun.jpg")
-	,$.loadAudio("assets/sounds/step1.mp3")
-	,$.loadAudio("assets/sounds/step2.mp3")
-	,$.loadAudio("assets/sounds/step3.mp3")
-	,$.getJSON("assets/shells/shells.json")
-	,$.loadImage("assets/shells/shells.jpg")
-	,$.getJSON("assets/shotgun/item/W-Shotgun.json")
-	,$.loadImage("assets/shotgun/item/W-Shotgun.jpg")
-	,$.loadImage("assets/misc/itemLight.jpg")
-	,$.loadImage("assets/misc/itemPlate.jpg")
-	,$.loadAudio("assets/sounds/itemAppeared.mp3")
-	,$.loadAudio("assets/sounds/itemPicked.mp3")
-	,$.loadAudio("assets/sounds/shotgunFired.mp3")
-	,$.loadImage("assets/misc/monsterLight.jpg")
-	,$.loadImage("assets/misc/monsterPlate.jpg")
-	,$.loadAudio("assets/sounds/monsterAppeared.mp3")
-	,$.getJSON("assets/imp/imp.json")
-	,$.loadImage("assets/imp/skin.jpg")
-	,$.loadImage("assets/misc/noise.jpg")
-	,$.loadImage("assets/misc/plasma.jpg")
-	,$.loadAudio("assets/sounds/pain1.mp3")
-	,$.loadAudio("assets/sounds/pain2.mp3")
-	,$.loadAudio("assets/sounds/death1.mp3")
-	,$.loadAudio("assets/sounds/death2.mp3")
-).then(function(
+Promise.all([
+	 loadImage("assets/skybox/Side1.jpg")
+	,loadImage("assets/skybox/Side2.jpg")
+	,loadImage("assets/skybox/Side3.jpg")
+	,loadImage("assets/skybox/Side4.jpg")
+	,loadImage("assets/skybox/Side5.jpg")
+	,loadImage("assets/skybox/Side6.jpg")
+	,loadJSON("assets/arena/arena.json")
+	,loadImage("assets/arena/arena.jpg")
+	,loadJSON("assets/shotgun/hud/Dreadus-Shotgun.json")
+	,loadImage("assets/shotgun/hud/Dreadus-Shotgun.jpg")
+	,loadAudio("assets/sounds/step1.mp3")
+	,loadAudio("assets/sounds/step2.mp3")
+	,loadAudio("assets/sounds/step3.mp3")
+	,loadJSON("assets/shells/shells.json")
+	,loadImage("assets/shells/shells.jpg")
+	,loadJSON("assets/shotgun/item/W-Shotgun.json")
+	,loadImage("assets/shotgun/item/W-Shotgun.jpg")
+	,loadImage("assets/misc/itemLight.jpg")
+	,loadImage("assets/misc/itemPlate.jpg")
+	,loadAudio("assets/sounds/itemAppeared.mp3")
+	,loadAudio("assets/sounds/itemPicked.mp3")
+	,loadAudio("assets/sounds/shotgunFired.mp3")
+	,loadImage("assets/misc/monsterLight.jpg")
+	,loadImage("assets/misc/monsterPlate.jpg")
+	,loadAudio("assets/sounds/monsterAppeared.mp3")
+	,loadJSON("assets/imp/imp.json")
+	,loadImage("assets/imp/skin.jpg")
+	,loadImage("assets/misc/noise.jpg")
+	,loadImage("assets/misc/plasma.jpg")
+	,loadAudio("assets/sounds/pain1.mp3")
+	,loadAudio("assets/sounds/pain2.mp3")
+	,loadAudio("assets/sounds/death1.mp3")
+	,loadAudio("assets/sounds/death2.mp3")
+]).then(function([
 	 skyboxSide1
 	,skyboxSide2
 	,skyboxSide3
@@ -106,26 +110,26 @@ $.when(
 	,pain2
 	,death1
 	,death2
-){
+]){
 	// create and store various stuff on game.assets
 
 	game.scene.add(new SkyBox([
 		skyboxSide3, skyboxSide5, skyboxSide6, skyboxSide1, skyboxSide2, skyboxSide4
 	], 1400));
-
-	arenaModel = new StaticMD2Model(arenaModel[0], arenaTexture);
+	
+	arenaModel = new StaticMD2Model(arenaModel, arenaTexture);
 	arenaModel.material.map.anisotropy = game.maxAnisotropy;
 	game.scene.add(arenaModel);
 
 	game.assets.arenaModel = arenaModel;
 
-	shotgunModel = new AnimatedMD2Model(shotgunModel[0], shotgunTexture);
+	shotgunModel = new AnimatedMD2Model(shotgunModel, shotgunTexture);
 	shotgunModel.rotation.y = -Math.PI / 2;
 	game.camera.add(shotgunModel);
 
-	game.assets.itemShellsModel = new StaticMD2Model(itemShellsModel[0], itemShellsTexture);
+	game.assets.itemShellsModel = new StaticMD2Model(itemShellsModel, itemShellsTexture);
 
-	game.assets.itemShotgunModel = new StaticMD2Model(itemShotgunModel[0], itemShotgunTexture);
+	game.assets.itemShotgunModel = new StaticMD2Model(itemShotgunModel, itemShotgunTexture);
 
 	game.assets.steps = [step1, step2, step3];
 
@@ -142,7 +146,7 @@ $.when(
 
 	game.assets.shotgunFired = shotgunFired;
 
-	game.assets.monsterModel = new AnimatedMD2Model(monsterModel[0], monsterTexture, "stand", 2600);
+	game.assets.monsterModel = new AnimatedMD2Model(monsterModel, monsterTexture, "stand", 2600);
 
 	DissolvingEffect.prototype.noiseTexture = new THREE.Texture(noiseTexture);
 	DissolvingEffect.prototype.noiseTexture.needsUpdate = true;
@@ -229,8 +233,8 @@ $.when(
 	}
 
 
-}).fail(function(err, msg) {
-	console.log(err, msg);
+}).catch(function(error) {
+	console.log(error);
 
-	alert("Failure: " + (err.statusText || msg || err));
-});
+	alert("Failure: " + (error.statusText || error.message || error));
+})
