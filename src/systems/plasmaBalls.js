@@ -2,7 +2,7 @@ import ecs from '../ecs'
 import game from '../game'
 import components from '../components'
 
-import THREE from '../../polyfilledThree/index'
+import THREE from '../polyfilledThree/index'
 
 var displacement = new THREE.Vector3();
 

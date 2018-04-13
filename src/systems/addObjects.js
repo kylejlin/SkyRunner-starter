@@ -3,10 +3,10 @@ import game from '../game'
 import map from '../map'
 import components from '../components'
 
-import THREE from '../../polyfilledThree/index'
+import THREE from '../polyfilledThree/index'
 import {
 	DissolvingEffect
-} from '../../misc3d'
+} from '../misc3d'
 
 export default { update: function(dt) {
 	ecs.for_each([components.Body, components.Motion, components.PendingAddition], function(entity) {

@@ -1,7 +1,7 @@
 import ecs from '../ecs'
 import components from '../components'
 
-import THREE from '../../polyfilledThree/index'
+import THREE from '../polyfilledThree/index'
 import $ from 'jquery'
 
 const IS_MOBILE = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch)

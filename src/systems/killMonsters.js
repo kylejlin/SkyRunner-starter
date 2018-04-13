@@ -3,7 +3,7 @@ import components from '../components'
 
 import {
 	DissolvingEffect
-} from '../../misc3d'
+} from '../misc3d'
 
 export default { update: function(dt) {
 	ecs.for_each([components.Shot], function(shot) {

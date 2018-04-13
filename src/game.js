@@ -2,7 +2,7 @@
  * Game plumbing code
  */
 
-import THREE from '../polyfilledThree/index'
+import THREE from './polyfilledThree/index'
 
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 

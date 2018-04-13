@@ -1,7 +1,7 @@
 /**
  * Define components
  */
-import THREE from '../polyfilledThree/index'
+import THREE from './polyfilledThree/index'
 
 export default {
 

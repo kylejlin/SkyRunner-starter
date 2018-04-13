@@ -1,7 +1,7 @@
 import ecs from '../ecs'
 import components from '../components'
 
-import THREE from '../../polyfilledThree/index'
+import THREE from '../polyfilledThree/index'
 
 var pads = [ new THREE.Vector3(-17.5, 8, -10), new THREE.Vector3(17.5, 8, -10), new THREE.Vector3(0, 8, +21) ];
 var temp = new THREE.Vector3();
