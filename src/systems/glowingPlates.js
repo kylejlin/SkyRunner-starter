@@ -1,7 +1,7 @@
 import ecs from '../ecs'
 import components from '../components'
 
-import THREE from '../polyfilledThree/index'
+import * as THREE from 'three'
 import $ from 'jquery'
 
 // rules to animate light pillar by

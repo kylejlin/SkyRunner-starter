@@ -3,7 +3,7 @@ import game from '../game'
 import map from '../map'
 import components from '../components'
 
-import THREE from '../polyfilledThree/index'
+import * as THREE from 'three'
 
 var playerPosition = new THREE.Vector3(), playerHeight = 0, target = new THREE.Vector3(), distance = new THREE.Vector3();
 

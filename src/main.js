@@ -29,7 +29,7 @@ import plasmaBalls from './systems/plasmaBalls'
 import hud from './systems/hud'
 
 import $ from 'jquery'
-import THREE from './polyfilledThree/index'
+import * as THREE from 'three'
 
 import {
 	SkyBox,

@@ -1,4 +1,4 @@
-import THREE from './polyfilledThree/index'
+import * as THREE from 'three'
 
 var locations = [
 	new THREE.Vector3(-2, 7.7, 25), new THREE.Vector3(+2, 7.7, 25),
