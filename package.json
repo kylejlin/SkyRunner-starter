@@ -8,9 +8,7 @@
     "three": "^0.91.0"
   },
   "dependencies": {
-    "howler": "^2.0.9",
-    "react": "^16.3.1",
-    "react-dom": "^16.3.1"
+    "howler": "^2.0.9"
   },
   "scripts": {
     "start": "react-scripts start",
