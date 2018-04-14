@@ -16,5 +16,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "homepage": "https://kylejlin.github.io/SkyRunner-starter/"
+  "homepage": "https://kylejlin.github.io/SkyRunner-starter/",
+  "license": "MIT"
 }
